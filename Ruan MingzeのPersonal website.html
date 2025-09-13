@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>阮铭泽の个人网站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -43,6 +42,7 @@
             color: var(--text);
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.5s ease;
         }
         
         .container {
@@ -352,6 +352,7 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         
         .website-card:hover {
@@ -398,6 +399,28 @@
             transform: translateY(-2px);
         }
         
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(231, 76, 60, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--accent);
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .website-card:hover .delete-btn {
+            opacity: 1;
+        }
+        
         /* 添加网站表单 */
         .add-website-form {
             background: var(--card-bg);
@@ -405,6 +428,7 @@
             padding: 25px;
             box-shadow: var(--shadow);
             margin-top: 30px;
+            transition: all 0.3s ease;
         }
         
         .form-title {
@@ -459,6 +483,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            background: rgba(0,0,0,0.05);
+            padding: 10px 20px;
+            border-radius: 50px;
         }
         
         .email-item i {
@@ -500,7 +527,7 @@
         </header>
         
         <div class="theme-toggle" id="themeToggle">
-            <i class="fas fa-moon"></i>
+            <i class="fas fa-moon" id="themeIcon"></i>
         </div>
         
         <div class="main-content">
@@ -726,19 +753,23 @@ if __name__ == "__main__":
     <script>
         // 主题切换功能
         const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
         const body = document.body;
         
-        // 从Cookie加载主题设置
-        let isDarkMode = Cookies.get('darkMode') === 'true';
+        // 检查本地存储中的主题设置
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        
+        // 应用主题设置
         function applyTheme() {
             if (isDarkMode) {
                 body.setAttribute('data-theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                themeIcon.className = 'fas fa-sun';
             } else {
                 body.setAttribute('data-theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                themeIcon.className = 'fas fa-moon';
             }
-            Cookies.set('darkMode', isDarkMode, { expires: 30 });
+            // 保存到本地存储
+            localStorage.setItem('darkMode', isDarkMode);
         }
         
         // 初始化主题
@@ -780,16 +811,17 @@ if __name__ == "__main__":
                             value = "5的阶乘是: 120";
                         } else if (call.includes('names')) {
                             value = "名字列表: ['阮铭泽', '张三', '李四', '王五']";
+                        } else if (call.includes('欢迎')) {
+                            value = "欢迎使用阮铭泽的Python编辑器";
                         } else {
                             value = call.replace(/^f*['"]|['"]$/g, '').replace(/\\n/g, '\n');
                         }
                         resultOutput += `>>> ${value}\n`;
                     });
+                    output.innerHTML = resultOutput;
                 } else {
-                    resultOutput = "代码执行成功（没有输出语句）";
+                    output.innerHTML = "代码执行成功（没有输出语句）";
                 }
-                
-                output.innerHTML = resultOutput;
             }, 1500);
         });
         
@@ -831,9 +863,9 @@ if __name__ == "__main__":
         const addWebsiteBtn = document.getElementById('addWebsiteBtn');
         const websitesGrid = document.getElementById('websitesGrid');
         
-        // 从Cookie加载自定义网站
+        // 从本地存储加载自定义网站
         function loadCustomWebsites() {
-            const customWebsites = Cookies.get('customWebsites');
+            const customWebsites = localStorage.getItem('customWebsites');
             if (customWebsites) {
                 try {
                     const sites = JSON.parse(customWebsites);
@@ -857,8 +889,42 @@ if __name__ == "__main__":
                 <h3 class="website-title">${website.name}</h3>
                 <p class="website-desc">${website.desc || '自定义网站'}</p>
                 <a href="${website.url}" class="website-btn" target="_blank">访问网站</a>
+                <div class="delete-btn" data-name="${website.name}">
+                    <i class="fas fa-times"></i>
+                </div>
             `;
             websitesGrid.appendChild(websiteCard);
+            
+            // 添加删除事件监听器
+            const deleteBtn = websiteCard.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                if(confirm(`确定要删除 "${website.name}" 网站吗？`)) {
+                    websiteCard.remove();
+                    saveCustomWebsites();
+                }
+            });
+        }
+        
+        // 保存自定义网站到本地存储
+        function saveCustomWebsites() {
+            const customCards = document.querySelectorAll('.website-card');
+            const customWebsites = [];
+            
+            customCards.forEach(card => {
+                // 跳过固定推荐网站
+                if (!card.querySelector('.delete-btn')) return;
+                
+                const title = card.querySelector('.website-title').textContent;
+                const url = card.querySelector('.website-btn').href;
+                
+                customWebsites.push({
+                    name: title,
+                    url: url,
+                    desc: card.querySelector('.website-desc').textContent
+                });
+            });
+            
+            localStorage.setItem('customWebsites', JSON.stringify(customWebsites));
         }
         
         // 显示/隐藏添加表单
@@ -892,11 +958,8 @@ if __name__ == "__main__":
             // 添加到网格
             addWebsiteToGrid(website);
             
-            // 保存到Cookie
-            const customWebsites = Cookies.get('customWebsites') || '[]';
-            let websites = JSON.parse(customWebsites);
-            websites.push(website);
-            Cookies.set('customWebsites', JSON.stringify(websites), { expires: 90 });
+            // 保存自定义网站
+            saveCustomWebsites();
             
             // 重置表单
             document.getElementById('websiteName').value = '';
