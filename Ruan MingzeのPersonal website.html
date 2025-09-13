@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="default">
+<html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,35 +7,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            /* 明亮主题变量 */
             --primary: #3498db;
             --secondary: #2c3e50;
             --accent: #e74c3c;
             --text: #333;
             --bg: #f5f7fa;
-            --card-bg: #fff;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --success: #2ecc71;
             --radius: 12px;
             --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
-        
+
+        [data-theme="dark"] {
+            /* 暗色主题变量 */
+            --primary: #1abc9c;
+            --secondary: #1f2c38;
+            --accent: #e67e22;
+            --text: #ecf0f1;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --border: #333;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             transition: all 0.3s ease;
         }
-        
+
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, var(--bg), #e4ebf3);
-            padding: 20px;
+            color: var(--text);
             min-height: 100vh;
+            line-height: 1.6;
+            padding: 20px;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-        
+
         header {
             display: flex;
             justify-content: space-between;
@@ -46,14 +63,29 @@
             box-shadow: var(--shadow);
             margin-bottom: 25px;
             position: relative;
+            overflow: hidden;
         }
-        
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 204, 113, 0.15));
+            z-index: 0;
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+
         .logo {
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .logo-icon {
             width: 64px;
             height: 64px;
@@ -65,25 +97,30 @@
             color: white;
             font-size: 32px;
             font-weight: bold;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .logo h1 {
             font-size: 32px;
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .controls {
             display: flex;
             align-items: center;
             gap: 20px;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .control-btn {
             padding: 10px 20px;
             border-radius: 50px;
             background: var(--card-bg);
+            border: 1px solid rgba(0,0,0,0.1);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -91,7 +128,16 @@
             font-weight: 600;
             box-shadow: var(--shadow);
         }
-        
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 极速代码0.15);
+        }
+
+        .control-btn i {
+            font-size: 18px;
+        }
+
         .theme-palette {
             display: flex;
             gap: 12px;
@@ -107,8 +153,8 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
         
-        .theme-default { background: #3498db; }
-        .theme-dark { background: #2c3e50; }
+        .theme-default { background: linear-gradient(135deg, #3498db, #2c3e50); }
+        .theme-dark { background: linear-gradient(135deg, #1a2a39, #121212); }
     </style>
 </head>
 <body>
@@ -124,231 +170,588 @@
                 <div class="control-btn" id="themeToggle">
                     <i class="fas fa-palette"></i>
                     <span>主题设置</span>
+                    
                     <div class="theme-palette">
-                        <div class="theme-color theme-default" data-theme="default"></div>
+                        <div class="theme-color theme-default" data-theme="light"></div>
                         <div class="theme-color theme-dark" data-theme="dark"></div>
                     </div>
                 </div>
             </div>
         </header>
         
-        <!-- 主要内容区将在下一步添加 -->
-    </div>
-    
-    <script>
-        // 主题切换功能
-        const themeColors = document.querySelectorAll('.theme-color');
-        themeColors.forEach(color => {
-            color.addEventListener('click', () => {
-                const theme = color.getAttribute('data-theme');
-                document.documentElement.setAttribute('data-theme', theme);
-            });
-        });
-    </script>
-</body>
-</html>
-<!-- 接上一步代码，在<div class="container">中添加以下内容 -->
-
+        <!-- 主要内容区 -->
         <main>
             <!-- 欢迎卡片 -->
             <div class="card" id="home">
                 <h2><i class="fas fa-star"></i> 欢迎来到阮铭泽の空间</h2>
                 <p>这里是阮铭泽的私人多功能网站，整合了开发工具、系统知识和娱乐功能。</p>
+                <p>您可以使用TurboWarp编辑器和Python编程环境进行创作，查看系统知识，访问FTP服务。</p>
                 
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-circle" style="color: #2ecc71;"></i>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <i class="fas fa-circle" style="color: var(--success)"></i>
                         <span>系统运行中</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-server"></i>
+                    <div class="status-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>安全防护已启用</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-plug"></i>
                         <span>服务在线</span>
                     </div>
                 </div>
             </div>
-            
             <!-- FTP服务 -->
             <div class="card" id="ftp">
                 <h2><i class="fas fa-folder-open"></i> FTP文件服务</h2>
-                <div style="padding: 20px; text-align: center;">
-                    <div style="font-size: 64px; color: var(--primary); margin-bottom: 15px;">
+                <div class="ftp-container">
+                    <div class="ftp-icon">
                         <i class="fas fa-cloud"></i>
                     </div>
-                    <div style="background: var(--card-bg); padding: 12px 25px; border-radius: 50px; font-family: monospace; font-size: 20px; margin: 20px 0;">
-                        ftp://192.168.1.102/
-                    </div>
-                    <button style="padding: 12px 25px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">
+                    <h3>访问您的FTP服务器</h3>
+                    <div class="ftp-address">ftp://192.168.1.102/</div>
+                    <p>通过文件资源管理器或FTP客户端访问您的本地文件服务器</p>
+                    <button class="btn" id="ftpConnect">
                         <i class="fas fa-external-link-alt"></i> 尝试在浏览器打开
                     </button>
                 </div>
             </div>
-        </main>
-<!-- 接上一步代码，在<div class="container">中添加以下内容 -->
-
-        <main>
-            <!-- 欢迎卡片 -->
-            <div class="card" id="home">
-                <h2><i class="fas fa-star"></i> 欢迎来到阮铭泽の空间</h2>
-                <p>这里是阮铭泽的私人多功能网站，整合了开发工具、系统知识和娱乐功能。</p>
+            
+            <!-- 整合编辑器 -->
+            <div class="card" id="editors">
+                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
                 
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-circle" style="color: #2ecc71;"></i>
-                        <span>系统运行中</span>
+                <div class="tabs-container">
+                    <div class="editor-tabs">
+                        <div class="editor-tab active" data-tab="scratch">
+                            <i class="fas fa-cat"></i>
+                            TurboWarp Scratch
+                        </div>
+                        <div class="editor-tab" data-tab="python">
+                            <i class="fas fa-python"></i>
+                            Python编辑器
+                        </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-server"></i>
-                        <span>服务在线</span>
+                </div>
+                
+                <div class="tab-content active" id="scratch-editor">
+                    <div class="scratch-container">
+                        <!-- TurboWarp编辑器将在这里加载 -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="python-editor">
+                    <div class="python-editor-container">
+                        <!-- Python编辑器将在这里加载 -->
                     </div>
                 </div>
             </div>
             
-            <!-- FTP服务 -->
-            <div class="card" id="ftp">
-                <h2><i class="fas fa-folder-open"></i> FTP文件服务</h2>
-                <div style="padding: 20px; text-align: center;">
-                    <div style="font-size: 64px; color: var(--primary); margin-bottom: 15px;">
-                        <i class="fas fa-cloud"></i>
-                    </div>
-                    <div style="background: var(--card-bg); padding: 12px 25px; border-radius: 50px; font-family: monospace; font-size: 20px; margin: 20px 0;">
-                        ftp://192.168.1.102/
-                    </div>
-                    <button style="padding: 12px 25px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">
-                        <i class="fas fa-external-link-alt"></i> 尝试在浏览器打开
-                    </button>
-                </div>
-            </div>
-        </main>
-        <!-- 接上一步代码，在<main>中添加以下内容 -->
-
-            <!-- 整合编辑器 -->
-            <div class="card" style="grid-column: span 2;" id="editors">
-                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
+            <style>
+                /* 状态栏 */
+                .status-bar {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 20px;
+                    padding: 12px 20px;
+                    background: rgba(0,0,0,0.03);
+                    border-radius: 8px;
+                    font-size: 14px;
+                }
                 
-                <div style="margin-bottom: 20px;">
-                    <div style="display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.03); border-radius: 8px; padding: 5px;">
-                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white;">
-                            <i class="fas fa-cat"></i> TurboWarp Scratch
-                        </div>
-                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-python"></i> Python编辑器
-                        </div>
-                    </div>
-                </div>
-<!-- 接上一步代码，在<main>中添加以下内容 -->
-
-            <!-- 整合编辑器 -->
-            <div class="card" style="grid-column: span 2;" id="editors">
-                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
+                .status-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
                 
-                <div style="margin-bottom: 20px;">
-                    <div style="display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.03); border-radius: 8px; padding: 5px;">
-                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white;">
-                            <i class="fas fa-cat"></i> TurboWarp Scratch
-                        </div>
-                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-python"></i> Python编辑器
-                        </div>
+                /* FTP服务 */
+                .ftp-container {
+                    padding: 30px;
+                    background: rgba(0, 0, 0, 0.03);
+                    border-radius: 8px;
+                    border: 2px dashed rgba(0, 0, 0, 0.1);
+                    min-height: 200px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 20px;
+                    text-align: center;
+                    flex-grow: 1;
+                }
+                
+                .ftp-icon {
+                    font-size: 64px;
+                    color: var(--primary);
+                }
+                
+                .ftp-address {
+                    background: var(--card-bg);
+                    padding: 12px 25px;
+                    border-radius: 50px;
+                    font-family: monospace;
+                    font-size: 20px;
+                    letter-spacing: 1px;
+                }
+                
+                /* 按钮样式 */
+                .btn {
+                    padding: 12px 25px;
+                    border-radius: 8px;
+                    border: none;
+                    background: var(--primary);
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.25);
+                }
+                
+                .btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4);
+                }
+                
+                /* 标签页样式 */
+                .tabs-container {
+                    margin-bottom: 20px;
+                }
+                
+                .editor-tabs {
+                    display: flex;
+                    gap: 5px;
+                    margin-bottom: 15px;
+                    background: rgba(0,0,0,0.03);
+                    border-radius: 8px;
+                    padding: 5px;
+                }
+                
+                .editor-tab {
+                    flex: 1;
+                    text-align: center;
+                    padding: 12px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    background: rgba(0,0,0,0.05);
+                    transition: all 0.3s ease;
+                }
+                
+                .editor-tab.active {
+                    background: var(--primary);
+                    color: white;
+                    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+                }
+                
+                .tab-content {
+                    display: none;
+                    height: 100%;
+                    flex-grow: 1;
+                }
+                
+                .tab-content.active {
+                    display: flex;
+                    flex-direction: column;
+                }
+                
+                /* TurboWarp容器 */
+                .scratch-container {
+                    height: 500px;
+                    width: 100%;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    position: relative;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                    flex-grow: 1;
+                    background-color: #ffffff;
+                    border: 1px solid var(--border);
+                }
+                
+                /* Python编辑器容器 */
+                .python-editor-container {
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
+                }
+            </style>
+            <!-- Windows知识 -->
+            <div class="card" id="windows">
+                <h2><i class="fab fa-windows"></i> Windows系统知识</h2>
+                
+                <div class="accordion active">
+                    <div class="accordion-header">
+                        <i class="fas fa-keyboard"></i>
+                        <span>快捷键大全</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <ul class="knowledge-list">
+                            <li><i class="fas fa-thumbs-up"></i> Win + D: 显示/隐藏桌面</li>
+                            <li><i class="fas fa-thumbs-up"></i> Win + E: 打开文件资源管理器</li>
+                            <li><i class="fas fa-thumbs-up"></i> Win + R: 打开运行窗口</li>
+                        </ul>
                     </div>
                 </div>
                 
-                <!-- Scratch编辑器 -->
-                <div style="height: 500px; width: 100%; border-radius: 8px; overflow: hidden;">
-                    <!-- TurboWarp官方嵌入 -->
-                    <iframe 
-                        src="https://turbowarp.org/editor/embed" 
-                        width="100%" 
-                        height="100%" 
-                        allowtransparency="true"
-                        frameborder="0" 
-                        scrolling="no" 
-                        allowfullscreen
-                        style="border-radius: 8px;">
-                    </iframe>
-                </div>
-            </div>
-<!-- 接上一步代码，添加Python编辑器标签页 -->
-
-                <!-- Python编辑器（默认隐藏） -->
-                <div style="display: none; flex-direction: column;">
-                    <div style="background: #282c34; border-radius: 8px; overflow: hidden; flex-grow: 1;">
-                        <div style="background: #252526; color: #cccccc; padding: 10px 15px; font-family: monospace; font-size: 14px;">
-                            <span>script.py</span>
-                            <span>Python 3.11</span>
-                        </div>
-                        <textarea style="width: 100%; height: 400px; padding: 15px; background: #282c34; color: #abb2bf; font-family: monospace; resize: vertical;">
-# Python代码编辑器
-print("欢迎使用Python编辑器")
-                        </textarea>
+                <div class="accordion">
+                    <div class="accordion-header">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>性能优化技巧</span>
+                        <i class="fas fa-chevron-down"></i>
                     </div>
-                    
-                    <div style="display: flex; justify-content: flex-end; margin-top: 15px; gap: 12px;">
-                        <button style="padding: 12px 25px; border-radius: 8px; border: none; background: #2ecc71; color: white; cursor: pointer;">
-                            <i class="fas fa-play"></i> 运行代码
-                        </button>
-                        <button style="padding: 12px 25px; border-radius: 8px; border: none; background: #e74c3c; color: white; cursor: pointer;">
-                            <i class="fas fa-trash"></i> 清空
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 15px; background: #2c3e50; color: white; border-radius: 8px; padding: 15px; min-height: 100px; font-family: monospace;">
-                        等待执行代码...点击"运行代码"查看结果
+                    <div class="accordion-content">
+                        <ul class="knowledge-list">
+                            <li><i class="fas fa-cogs"></i> 禁用不必要的启动程序</li>
+                            <li><i class="fas fa-cogs"></i> 使用磁盘清理工具定期清理</li>
+                        </ul>
                     </div>
                 </div>
             </div>
             
+            <!-- 娱乐区 -->
+            <div class="card" id="ent">
+                <h2><i class="fas fa-gamepad"></i> 娱乐休闲区</h2>
+                
+                <div class="entertainment-grid">
+                    <div class="ent-card">
+                        <i class="fas fa-music"></i>
+                        <h3>音乐世界</h3>
+                        <p>精选播放列表</p>
+                    </div>
+                    
+                    <div class="ent-card">
+                        <i class="fas fa-film"></i>
+                        <h3>影视推荐</h3>
+                        <p>热门电影电视剧</p>
+                    </div>
+                </div>
+            </div>
         </main>
         
         <!-- 页脚 -->
-        <footer style="text-align: center; padding: 30px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);">
+        <footer>
             <p>© 2023 阮铭泽の个人网站 | 知行合一 · 技趣相融</p>
             <p>联系邮箱: mingze.ruan@example.com</p>
         </footer>
-<!-- 添加在</body>标签前 -->
+    </div>
 
-    <script>
-        // 主题切换功能
-        document.querySelectorAll('.theme-color').forEach(color => {
-            color.addEventListener('click', () => {
-                const theme = color.getAttribute('data-theme');
-                document.documentElement.setAttribute('data-theme', theme);
-            });
-        });
-
-        // 编辑器标签切换功能
-        const tabs = document.querySelectorAll('.editor-tabs > div');
-        const editors = document.querySelectorAll('#editors > div:last-child > div');
+    <style>
+        /* 主网格布局 */
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
         
-        tabs.forEach((tab, index) => {
-            tab.addEventListener('click', () => {
-                // 移除所有激活状态
-                tabs.forEach(t => {
-                    t.style.background = "";
-                    t.style.color = "";
-                });
-                // 隐藏所有编辑器
-                editors.forEach(e => e.style.display = "none");
-                
-                // 设置当前激活状态
-                tab.style.background = "var(--primary)";
-                tab.style.color = "white";
-                
-                // 显示当前编辑器
-                editors[index].style.display = "flex";
-            });
-        });
+        /* 卡片通用样式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
         
-        // Python运行功能
-        const runBtn = document.querySelector('#editors button:first-of-type');
-        const output = document.querySelector('#editors > div:last-child > div:last-child');
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
         
-        runBtn.addEventListener('click', () => {
-            output.innerHTML = "<i class='fas fa-spinner fa-spin'></i> 正在执行代码...";
+        .card h2 {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+        }
+        
+        .card h2 i {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(52, 152, 219, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        /* 折叠面板 */
+        .accordion {
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.03);
+        }
+        
+        .accordion-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .accordion-header:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion.active .accordion-content {
+            padding: 20px;
+            max-height: 1000px;
+            background: var(--card-bg);
+        }
+        
+        /* 知识列表 */
+        .knowledge-list {
+            padding: 0;
+            list-style-type: none;
+        }
+        
+        .knowledge-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .knowledge-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .knowledge-list li i {
+            color: var(--primary);
+            margin-top: 5px;
+        }
+        
+        /* 娱乐区 */
+        .entertainment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .ent-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .ent-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+            background: rgba(231, 76, 60, 0.05);
+        }
+        
+        .ent-card i {
+            font-size: 42px;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        .ent-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
             
-            // 模拟执行过程
-            setTimeout(() => {
-                output.innerHTML = "代码执行成功！\n输出：欢迎使用Python编辑器";
-            }, 1000);
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .controls {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <script>
+        // ==== 初始化 TurboWarp 编辑器 ====
+        function initTurboWarpEditor() {
+            const scratchContainer = document.querySelector('.scratch-container');
+            
+            // 创建iframe元素
+            const iframe = document.createElement('iframe');
+            iframe.src = "https://turbowarp.org/editor/embed";
+            iframe.width = "100%";
+            iframe.height = "100%";
+            iframe.allowtransparency = "true";
+            iframe.frameborder = "0";
+            iframe.scrolling = "no";
+            iframe.allowfullscreen = true;
+            iframe.title = "阮铭泽的TurboWarp编辑器";
+            iframe.style.border = "none";
+            iframe.style.borderRadius = "8px";
+            
+            scratchContainer.appendChild(iframe);
+        }
+        
+        // ==== 初始化 Python 编辑器 ====
+        function initPythonEditor() {
+            const pythonEditor = document.querySelector('#python-editor .python-editor-container');
+            
+            // 创建编辑器结构
+            pythonEditor.innerHTML = `
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <span>script.py</span>
+                        <span>Python 3.11</span>
+                    </div>
+                    <textarea class="editor-content" id="pythonEditor"># Python代码编辑器
+print("欢迎使用阮铭泽的Python编辑器")
+                    </textarea>
+                </div>
+                
+                <div class="editor-footer">
+                    <button class="btn btn-run" id="runCode">
+                        <i class="fas fa-play"></i> 运行代码
+                    </button>
+                    <button class="btn btn-clear" id="clearCode">
+                        <i class="fas fa-trash"></i> 清空
+                    </button>
+                </div>
+                
+                <div class="output-container" id="output">
+                    等待执行代码...点击"运行代码"查看结果
+                </div>
+            `;
+            
+            // Python编辑器功能
+            const runBtn = document.getElementById('runCode');
+            const clearBtn = document.getElementById('clearCode');
+            const output = document.getElementById('output');
+            const editor = document.getElementById('pythonEditor');
+            
+            runBtn.addEventListener('click', () => {
+                output.innerHTML = "<i class='fas fa-spinner fa-spin'></i> 正在执行代码...";
+                
+                // 模拟代码执行
+                setTimeout(() => {
+                    const code = editor.value;
+                    const mockOutput = code.includes('print') ? 
+                        `>>> ${code}\n欢迎使用阮铭泽的Python编辑器` : 
+                        '代码执行成功！';
+                        
+                    output.innerHTML = `<div>${mockOutput}</div>`;
+                }, 1500);
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                if (confirm('确定要清空代码编辑器内容吗？')) {
+                    editor.value = '';
+                    output.innerHTML = '编辑器已清空';
+                }
+            });
+        }
+        
+        // ==== 主题切换功能 ====
+        function initThemeSwitcher() {
+            const themeColors = document.querySelectorAll('.theme-color');
+            
+            themeColors.forEach(color => {
+                color.addEventListener('click', () => {
+                    const theme = color.getAttribute('data-theme');
+                    document.documentElement.setAttribute('data-theme', theme);
+                });
+            });
+        }
+        
+        // ==== 折叠菜单功能 ====
+        function initAccordions() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const accordion = header.parentElement;
+                    accordion.classList.toggle('active');
+                    
+                    const icon = header.querySelector('.fa-chevron-down');
+                    if (accordion.classList.contains('active')) {
+                        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    } else {
+                        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                    }
+                });
+            });
+        }
+        
+        // ==== 编辑器切换功能 ====
+        function initEditorTabs() {
+            const editorTabs = document.querySelectorAll('.editor-tab');
+            
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签的active状态
+                    document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                    // 隐藏所有标签内容
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // 添加当前标签的active状态
+                    tab.classList.add('active');
+                    
+                    // 显示对应的内容
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-editor`).classList.add('active');
+                });
+            });
+        }
+        
+        // ==== 页面加载完成后初始化 ====
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeSwitcher();
+            initEditorTabs();
+            initAccordions();
+            initTurboWarpEditor();
+            initPythonEditor();
+            
+            // 激活第一个折叠面板
+            const firstAccordion = document.querySelector('.accordion');
+            if (firstAccordion) {
+                firstAccordion.classList.add('active');
+            }
         });
     </script>
 </body>
