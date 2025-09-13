@@ -1,27 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>阮铭泽の个人网站</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
         :root {
-            /* 明亮主题变量 */
             --primary: #3498db;
             --secondary: #2c3e50;
             --accent: #e74c3c;
+            --success: #2ecc71;
             --text: #333;
             --bg: #f5f7fa;
             --card-bg: #ffffff;
             --border: #e0e0e0;
-            --success: #2ecc71;
-            --radius: 12px;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
-
+        
         [data-theme="dark"] {
-            /* 暗色主题变量 */
             --primary: #1abc9c;
             --secondary: #1f2c38;
             --accent: #e67e22;
@@ -29,730 +35,566 @@
             --bg: #121212;
             --card-bg: #1e1e1e;
             --border: #333;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-
+        
         body {
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, var(--bg), #e4ebf3);
             color: var(--text);
             min-height: 100vh;
-            line-height: 1.6;
             padding: 20px;
         }
-
+        
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-
+        
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
+            padding: 30px;
             background: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
+            text-align: center;
         }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(46, 204, 113, 0.15));
-            z-index: 0;
-            clip-path: polygon(100% 0, 0 0, 100% 100%);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 32px;
-            font-weight: bold;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .logo h1 {
-            font-size: 32px;
+        
+        h1 {
+            font-size: 2.8rem;
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .control-btn {
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: var(--card-bg);
-            border: 1px solid rgba(0,0,0,0.1);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            box-shadow: var(--shadow);
-        }
-
-        .control-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 极速代码0.15);
-        }
-
-        .control-btn i {
-            font-size: 18px;
-        }
-
-        .theme-palette {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
+            margin-bottom: 10px;
         }
         
-        .theme-color {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid var(--card-bg);
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        .description {
+            color: var(--text);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 10px auto;
+            line-height: 1.6;
         }
         
-        .theme-default { background: linear-gradient(135deg, #3498db, #2c3e50); }
-        .theme-dark { background: linear-gradient(135deg, #1a2a39, #121212); }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- 头部 -->
-        <header>
-            <div class="logo">
-                <div class="logo-icon">阮</div>
-                <h1>阮铭泽の个人网站</h1>
-            </div>
-            
-            <div class="controls">
-                <div class="control-btn" id="themeToggle">
-                    <i class="fas fa-palette"></i>
-                    <span>主题设置</span>
-                    
-                    <div class="theme-palette">
-                        <div class="theme-color theme-default" data-theme="light"></div>
-                        <div class="theme-color theme-dark" data-theme="dark"></div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <!-- 主要内容区 -->
-        <main>
-            <!-- 欢迎卡片 -->
-            <div class="card" id="home">
-                <h2><i class="fas fa-star"></i> 欢迎来到阮铭泽の空间</h2>
-                <p>这里是阮铭泽的私人多功能网站，整合了开发工具、系统知识和娱乐功能。</p>
-                <p>您可以使用TurboWarp编辑器和Python编程环境进行创作，查看系统知识，访问FTP服务。</p>
-                
-                <div class="status-bar">
-                    <div class="status-item">
-                        <i class="fas fa-circle" style="color: var(--success)"></i>
-                        <span>系统运行中</span>
-                    </div>
-                    <div class="status-item">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>安全防护已启用</span>
-                    </div>
-                    <div class="status-item">
-                        <i class="fas fa-plug"></i>
-                        <span>服务在线</span>
-                    </div>
-                </div>
-            </div>
-            <!-- FTP服务 -->
-            <div class="card" id="ftp">
-                <h2><i class="fas fa-folder-open"></i> FTP文件服务</h2>
-                <div class="ftp-container">
-                    <div class="ftp-icon">
-                        <i class="fas fa-cloud"></i>
-                    </div>
-                    <h3>访问您的FTP服务器</h3>
-                    <div class="ftp-address">ftp://192.168.1.102/</div>
-                    <p>通过文件资源管理器或FTP客户端访问您的本地文件服务器</p>
-                    <button class="btn" id="ftpConnect">
-                        <i class="fas fa-external-link-alt"></i> 尝试在浏览器打开
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 整合编辑器 -->
-            <div class="card" id="editors">
-                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
-                
-                <div class="tabs-container">
-                    <div class="editor-tabs">
-                        <div class="editor-tab active" data-tab="scratch">
-                            <i class="fas fa-cat"></i>
-                            TurboWarp Scratch
-                        </div>
-                        <div class="editor-tab" data-tab="python">
-                            <i class="fas fa-python"></i>
-                            Python编辑器
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content active" id="scratch-editor">
-                    <div class="scratch-container">
-                        <!-- TurboWarp编辑器将在这里加载 -->
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="python-editor">
-                    <div class="python-editor-container">
-                        <!-- Python编辑器将在这里加载 -->
-                    </div>
-                </div>
-            </div>
-            
-            <style>
-                /* 状态栏 */
-                .status-bar {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 20px;
-                    padding: 12px 20px;
-                    background: rgba(0,0,0,0.03);
-                    border-radius: 8px;
-                    font-size: 14px;
-                }
-                
-                .status-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-                
-                /* FTP服务 */
-                .ftp-container {
-                    padding: 30px;
-                    background: rgba(0, 0, 0, 0.03);
-                    border-radius: 8px;
-                    border: 2px dashed rgba(0, 0, 0, 0.1);
-                    min-height: 200px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 20px;
-                    text-align: center;
-                    flex-grow: 1;
-                }
-                
-                .ftp-icon {
-                    font-size: 64px;
-                    color: var(--primary);
-                }
-                
-                .ftp-address {
-                    background: var(--card-bg);
-                    padding: 12px 25px;
-                    border-radius: 50px;
-                    font-family: monospace;
-                    font-size: 20px;
-                    letter-spacing: 1px;
-                }
-                
-                /* 按钮样式 */
-                .btn {
-                    padding: 12px 25px;
-                    border-radius: 8px;
-                    border: none;
-                    background: var(--primary);
-                    color: white;
-                    font-weight: 600;
-                    cursor: pointer;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 10px;
-                    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.25);
-                }
-                
-                .btn:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4);
-                }
-                
-                /* 标签页样式 */
-                .tabs-container {
-                    margin-bottom: 20px;
-                }
-                
-                .editor-tabs {
-                    display: flex;
-                    gap: 5px;
-                    margin-bottom: 15px;
-                    background: rgba(0,0,0,0.03);
-                    border-radius: 8px;
-                    padding: 5px;
-                }
-                
-                .editor-tab {
-                    flex: 1;
-                    text-align: center;
-                    padding: 12px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    background: rgba(0,0,0,0.05);
-                    transition: all 0.3s ease;
-                }
-                
-                .editor-tab.active {
-                    background: var(--primary);
-                    color: white;
-                    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
-                }
-                
-                .tab-content {
-                    display: none;
-                    height: 100%;
-                    flex-grow: 1;
-                }
-                
-                .tab-content.active {
-                    display: flex;
-                    flex-direction: column;
-                }
-                
-                /* TurboWarp容器 */
-                .scratch-container {
-                    height: 500px;
-                    width: 100%;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    position: relative;
-                    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-                    flex-grow: 1;
-                    background-color: #ffffff;
-                    border: 1px solid var(--border);
-                }
-                
-                /* Python编辑器容器 */
-                .python-editor-container {
-                    flex-grow: 1;
-                    display: flex;
-                    flex-direction: column;
-                }
-            </style>
-            <!-- Windows知识 -->
-            <div class="card" id="windows">
-                <h2><i class="fab fa-windows"></i> Windows系统知识</h2>
-                
-                <div class="accordion active">
-                    <div class="accordion-header">
-                        <i class="fas fa-keyboard"></i>
-                        <span>快捷键大全</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <ul class="knowledge-list">
-                            <li><i class="fas fa-thumbs-up"></i> Win + D: 显示/隐藏桌面</li>
-                            <li><i class="fas fa-thumbs-up"></i> Win + E: 打开文件资源管理器</li>
-                            <li><i class="fas fa-thumbs-up"></i> Win + R: 打开运行窗口</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="accordion">
-                    <div class="accordion-header">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>性能优化技巧</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <ul class="knowledge-list">
-                            <li><i class="fas fa-cogs"></i> 禁用不必要的启动程序</li>
-                            <li><i class="fas fa-cogs"></i> 使用磁盘清理工具定期清理</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 娱乐区 -->
-            <div class="card" id="ent">
-                <h2><i class="fas fa-gamepad"></i> 娱乐休闲区</h2>
-                
-                <div class="entertainment-grid">
-                    <div class="ent-card">
-                        <i class="fas fa-music"></i>
-                        <h3>音乐世界</h3>
-                        <p>精选播放列表</p>
-                    </div>
-                    
-                    <div class="ent-card">
-                        <i class="fas fa-film"></i>
-                        <h3>影视推荐</h3>
-                        <p>热门电影电视剧</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <!-- 页脚 -->
-        <footer>
-            <p>© 2023 阮铭泽の个人网站 | 知行合一 · 技趣相融</p>
-            <p>联系邮箱: mingze.ruan@example.com</p>
-        </footer>
-    </div>
-
-    <style>
-        /* 主网格布局 */
-        main {
+        .main-content {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 25px;
-            margin-bottom: 30px;
         }
         
-        /* 卡片通用样式 */
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 25px;
+            padding: 30px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
-            border-top: 4px solid var(--primary);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
         
         .card h2 {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 22px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
         }
         
         .card h2 i {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: rgba(52, 152, 219, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: var(--primary);
         }
         
-        /* 折叠面板 */
-        .accordion {
-            margin-bottom: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(0,0,0,0.03);
-        }
-        
-        .accordion-header {
-            padding: 16px 20px;
-            cursor: pointer;
+        /* FTP指南部分 */
+        .ftp-address {
+            background: var(--card-bg);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 1.4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
-            background: rgba(52, 152, 219, 0.1);
+            margin: 20px 0;
+            border: 2px dashed var(--primary);
         }
         
-        .accordion-header:hover {
-            background: rgba(52, 152, 219, 0.2);
-        }
-        
-        .accordion-content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .accordion.active .accordion-content {
-            padding: 20px;
-            max-height: 1000px;
-            background: var(--card-bg);
-        }
-        
-        /* 知识列表 */
-        .knowledge-list {
-            padding: 0;
-            list-style-type: none;
-        }
-        
-        .knowledge-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        .ftp-steps {
             display: flex;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .browser-section {
+            margin-top: 15px;
+        }
+        
+        .browser-title {
+            display: flex;
+            align-items: center;
             gap: 10px;
-        }
-        
-        .knowledge-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .knowledge-list li i {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             color: var(--primary);
-            margin-top: 5px;
         }
         
-        /* 娱乐区 */
-        .entertainment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
+        .browser-steps {
+            padding-left: 30px;
         }
         
-        .ent-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: var(--transition);
-            cursor: pointer;
+        .browser-steps li {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            position: relative;
+            list-style: none;
         }
         
-        .ent-card:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transform: translateY(-5px);
-            background: rgba(231, 76, 60, 0.05);
-        }
-        
-        .ent-card i {
-            font-size: 42px;
+        .browser-steps li:before {
+            content: "→";
             color: var(--accent);
+            position: absolute;
+            left: -30px;
+            font-weight: bold;
+        }
+        
+        .browser-steps code {
+            background: rgba(0,0,0,0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        /* Python编辑器部分 */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            gap: 15px;
             margin-bottom: 15px;
         }
         
-        .ent-card h3 {
-            margin-bottom: 10px;
-            font-size: 18px;
+        .editor-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
         
-        /* 页脚 */
+        .editor-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .editor-run {
+            background: var(--success);
+        }
+        
+        .editor-clear {
+            background: var(--accent);
+        }
+        
+        textarea.python-editor {
+            width: 100%;
+            min-height: 300px; /* 更大的编辑区域 */
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Consolas', monospace;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        .output-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #2c3e50;
+            color: white;
+            min-height: 100px;
+            font-family: monospace;
+            font-size: 1rem;
+            white-space: pre-wrap;
+        }
+        
+        /* 天气小组件 */
+        .weather-widget {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .current-weather {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+        }
+        
+        .weather-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .temp-large {
+            font-size: 3.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .weather-location {
+            font-size: 1.5rem;
+            margin: 5px 0;
+        }
+        
+        .weather-desc {
+            font-size: 1.2rem;
+        }
+        
+        .weather-icon {
+            font-size: 5rem;
+        }
+        
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .forecast-day {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .day-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .forecast-icon {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: #f1c40f;
+        }
+        
+        .forecast-temp {
+            font-weight: bold;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+        
         footer {
             text-align: center;
             padding: 30px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-top: 20px;
+            margin-top: 40px;
+            color: var(--text);
+            font-size: 1rem;
         }
         
         @media (max-width: 768px) {
-            main {
+            .main-content {
                 grid-template-columns: 1fr;
             }
             
-            header {
+            .ftp-address {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .current-weather {
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
-                padding: 20px;
-            }
-            
-            .controls {
-                justify-content: center;
-                flex-wrap: wrap;
             }
         }
     </style>
-    <script>
-        // ==== 初始化 TurboWarp 编辑器 ====
-        function initTurboWarpEditor() {
-            const scratchContainer = document.querySelector('.scratch-container');
-            
-            // 创建iframe元素
-            const iframe = document.createElement('iframe');
-            iframe.src = "https://turbowarp.org/editor/embed";
-            iframe.width = "100%";
-            iframe.height = "100%";
-            iframe.allowtransparency = "true";
-            iframe.frameborder = "0";
-            iframe.scrolling = "no";
-            iframe.allowfullscreen = true;
-            iframe.title = "阮铭泽的TurboWarp编辑器";
-            iframe.style.border = "none";
-            iframe.style.borderRadius = "8px";
-            
-            scratchContainer.appendChild(iframe);
-        }
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>阮铭泽の个人网站</h1>
+            <p class="description">FTP访问指南、Python编程和天气信息一站式解决方案</p>
+        </header>
         
-        // ==== 初始化 Python 编辑器 ====
-        function initPythonEditor() {
-            const pythonEditor = document.querySelector('#python-editor .python-editor-container');
-            
-            // 创建编辑器结构
-            pythonEditor.innerHTML = `
-                <div class="editor-container">
-                    <div class="editor-header">
-                        <span>script.py</span>
-                        <span>Python 3.11</span>
-                    </div>
-                    <textarea class="editor-content" id="pythonEditor"># Python代码编辑器
-print("欢迎使用阮铭泽的Python编辑器")
-                    </textarea>
+        <div class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </div>
+        
+        <div class="main-content">
+            <!-- FTP指南部分 -->
+            <div class="card">
+                <h2><i class="fas fa-folder-open"></i> FTP访问指南</h2>
+                
+                <div class="ftp-address">
+                    <span>ftp://192.168.1.102/</span>
+                    <button class="editor-btn">
+                        <i class="fas fa-copy"></i> 复制地址
+                    </button>
                 </div>
                 
-                <div class="editor-footer">
-                    <button class="btn btn-run" id="runCode">
+                <div class="ftp-steps">
+                    <p>请按照以下指南使用Internet Explorer或Microsoft Edge访问FTP服务器：</p>
+                    
+                    <div class="browser-section">
+                        <div class="browser-title">
+                            <i class="fab fa-internet-explorer"></i>
+                            <h3>Internet Explorer 操作方法</h3>
+                        </div>
+                        <ol class="browser-steps">
+                            <li>打开Internet Explorer浏览器</li>
+                            <li>在地址栏输入：<code>ftp://192.168.1.102/</code></li>
+                            <li>按Enter键访问，完成！</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="browser-section">
+                        <div class="browser-title">
+                            <i class="fab fa-edge"></i>
+                            <h3>Microsoft Edge 操作方法</h3>
+                        </div>
+                        <ol class="browser-steps">
+                            <li>打开Edge浏览器设置，导航到"默认浏览器"设置</li>
+                            <li>将"允许在Internet Explorer模式下重新加载网站"切换为<strong>允许</strong>，然后重启浏览器</li>
+                            <li>重启后，重新打开设置，在"Internet Explorer模式页面"部分添加新网站</li>
+                            <li>输入<code>ftp://192.168.1.102/</code>并保存</li>
+                            <li>在地址栏输入<code>ftp://192.168.1.102/</code>访问，完成！</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Python编辑器部分 -->
+            <div class="card">
+                <h2><i class="fab fa-python"></i> Python编辑器</h2>
+                
+                <div class="editor-toolbar">
+                    <button class="editor-btn editor-run" id="runCode">
                         <i class="fas fa-play"></i> 运行代码
                     </button>
-                    <button class="btn btn-clear" id="clearCode">
+                    <button class="editor-btn editor-clear" id="clearCode">
                         <i class="fas fa-trash"></i> 清空
                     </button>
                 </div>
                 
-                <div class="output-container" id="output">
-                    等待执行代码...点击"运行代码"查看结果
-                </div>
-            `;
-            
-            // Python编辑器功能
-            const runBtn = document.getElementById('runCode');
-            const clearBtn = document.getElementById('clearCode');
-            const output = document.getElementById('output');
-            const editor = document.getElementById('pythonEditor');
-            
-            runBtn.addEventListener('click', () => {
-                output.innerHTML = "<i class='fas fa-spinner fa-spin'></i> 正在执行代码...";
+                <textarea class="python-editor" id="pythonEditor"># Python代码编辑器
+def factorial(n):
+    """计算阶乘"""
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+# 主函数
+if __name__ == "__main__":
+    num = 5
+    result = factorial(num)
+    print(f"{num}的阶乘是: {result}")
+    
+    # 其他操作
+    names = ["阮铭泽", "张三", "李四", "王五"]
+    print("名字列表:", names)</textarea>
                 
-                // 模拟代码执行
-                setTimeout(() => {
-                    const code = editor.value;
-                    const mockOutput = code.includes('print') ? 
-                        `>>> ${code}\n欢迎使用阮铭泽的Python编辑器` : 
-                        '代码执行成功！';
+                <div class="output-container" id="output">
+                    运行结果将在这里显示...
+                </div>
+            </div>
+            
+            <!-- 天气小组件 -->
+            <div class="card">
+                <h2><i class="fas fa-cloud-sun"></i> 天气信息</h2>
+                
+                <div class="weather-widget">
+                    <div class="current-weather">
+                        <div class="weather-info">
+                            <div class="temp-large">26°</div>
+                            <div class="weather-location">北京市</div>
+                            <div class="weather-desc">晴朗</div>
+                        </div>
+                        <div class="weather-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="forecast">
+                        <div class="forecast-day">
+                            <div class="day-name">今天</div>
+                            <div class="forecast-icon"><i class="fas fa-sun"></i></div>
+                            <div class="forecast-temp">25°-29°</div>
+                        </div>
                         
-                    output.innerHTML = `<div>${mockOutput}</div>`;
-                }, 1500);
-            });
-            
-            clearBtn.addEventListener('click', () => {
-                if (confirm('确定要清空代码编辑器内容吗？')) {
-                    editor.value = '';
-                    output.innerHTML = '编辑器已清空';
-                }
-            });
-        }
+                        <div class="forecast-day">
+                            <div class="day-name">周一</div>
+                            <div class="forecast-icon"><i class="fas fa-cloud-sun"></i></div>
+                            <div class="forecast-temp">24°-28°</div>
+                        </div>
+                        
+                        <div class="forecast-day">
+                            <div class="day-name">周二</div>
+                            <div class="forecast-icon"><i class="fas fa-cloud"></i></div>
+                            <div class="forecast-temp">23°-27°</div>
+                        </div>
+                        
+                        <div class="forecast-day">
+                            <div class="day-name">周三</div>
+                            <div class="forecast-icon"><i class="fas fa-cloud-rain"></i></div>
+                            <div class="forecast-temp">21°-25°</div>
+                        </div>
+                        
+                        <div class="forecast-day">
+                            <div class="day-name">周四</div>
+                            <div class="forecast-icon"><i class="fas fa-sun"></i></div>
+                            <div class="forecast-temp">24°-28°</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        // ==== 主题切换功能 ====
-        function initThemeSwitcher() {
-            const themeColors = document.querySelectorAll('.theme-color');
-            
-            themeColors.forEach(color => {
-                color.addEventListener('click', () => {
-                    const theme = color.getAttribute('data-theme');
-                    document.documentElement.setAttribute('data-theme', theme);
-                });
-            });
-        }
+        <footer>
+            <p>© 2023 阮铭泽の个人网站 | 知行合一 · 技趣相融</p>
+            <p>联系邮箱: mingze.ruan@example.com</p>
+        </footer>
+    </div>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        let isDarkMode = false;
         
-        // ==== 折叠菜单功能 ====
-        function initAccordions() {
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const accordion = header.parentElement;
-                    accordion.classList.toggle('active');
-                    
-                    const icon = header.querySelector('.fa-chevron-down');
-                    if (accordion.classList.contains('active')) {
-                        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-                    } else {
-                        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-                    }
-                });
-            });
-        }
-        
-        // ==== 编辑器切换功能 ====
-        function initEditorTabs() {
-            const editorTabs = document.querySelectorAll('.editor-tab');
-            
-            editorTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // 移除所有标签的active状态
-                    document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
-                    // 隐藏所有标签内容
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    // 添加当前标签的active状态
-                    tab.classList.add('active');
-                    
-                    // 显示对应的内容
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-editor`).classList.add('active');
-                });
-            });
-        }
-        
-        // ==== 页面加载完成后初始化 ====
-        document.addEventListener('DOMContentLoaded', () => {
-            initThemeSwitcher();
-            initEditorTabs();
-            initAccordions();
-            initTurboWarpEditor();
-            initPythonEditor();
-            
-            // 激活第一个折叠面板
-            const firstAccordion = document.querySelector('.accordion');
-            if (firstAccordion) {
-                firstAccordion.classList.add('active');
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
             }
         });
+        
+        // Python编辑器功能
+        const runBtn = document.getElementById('runCode');
+        const clearBtn = document.getElementById('clearCode');
+        const output = document.getElementById('output');
+        const editor = document.getElementById('pythonEditor');
+        
+        runBtn.addEventListener('click', () => {
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在执行代码...';
+            
+            // 模拟代码执行
+            setTimeout(() => {
+                const code = editor.value;
+                // 提取Python代码中print语句的输出
+                let result = "执行结果：\n";
+                
+                // 从代码中解析出print输出
+                const printMatches = code.match(/print\(([^)]+)\)/g);
+                if (printMatches) {
+                    printMatches.forEach(printCall => {
+                        const argMatch = printCall.match(/print\(([^)]+)\)/);
+                        if (argMatch && argMatch[1]) {
+                            result += ">>> " + argMatch[1].replace(/^f/, '').replace(/"/g, '') + "\n";
+                        }
+                    });
+                    
+                    // 添加示例输出
+                    if (code.includes("factorial")) {
+                        result += ">>> 5的阶乘是: 120\n";
+                    }
+                    
+                    if (code.includes("names")) {
+                        result += ">>> 名字列表: ['阮铭泽', '张三', '李四', '王五']\n";
+                    }
+                } else {
+                    result += "代码执行完成（无输出）";
+                }
+                
+                output.innerHTML = result;
+            }, 1000);
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            if (confirm('确定要清空代码编辑器内容吗？')) {
+                editor.value = '';
+                output.innerHTML = '编辑器已清空';
+            }
+        });
+        
+        // 复制FTP地址
+        const copyButtons = document.querySelectorAll('.editor-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const ftpAddress = 'ftp://192.168.1.102/';
+                
+                // 创建临时textarea元素
+                const tempTextarea = document.createElement('textarea');
+                tempTextarea.value = ftpAddress;
+                document.body.appendChild(tempTextarea);
+                
+                // 选择并复制文本
+                tempTextarea.select();
+                document.execCommand('copy');
+                
+                // 移除临时元素
+                document.body.removeChild(tempTextarea);
+                
+                // 显示反馈
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 1500);
+            });
+        });
+        
+        // 获取天气数据 - 实际应用中这里应该使用API
+        function updateWeather() {
+            // 在实际应用中这里会调用天气API
+            console.log("天气数据已更新");
+        }
+        
+        // 初始化
+        updateWeather();
     </script>
 </body>
 </html>
