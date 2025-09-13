@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阮铭泽の个人网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --text: #333;
+            --bg: #f5f7fa;
+            --card-bg: #fff;
+            --radius: 12px;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--bg), #e4ebf3);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .logo h1 {
+            font-size: 32px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: var(--card-bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+        
+        .theme-palette {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .theme-color {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--card-bg);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .theme-default { background: #3498db; }
+        .theme-dark { background: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">阮</div>
+                <h1>阮铭泽の个人网站</h1>
+            </div>
+            
+            <div class="controls">
+                <div class="control-btn" id="themeToggle">
+                    <i class="fas fa-palette"></i>
+                    <span>主题设置</span>
+                    <div class="theme-palette">
+                        <div class="theme-color theme-default" data-theme="default"></div>
+                        <div class="theme-color theme-dark" data-theme="dark"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 主要内容区将在下一步添加 -->
+    </div>
+    
+    <script>
+        // 主题切换功能
+        const themeColors = document.querySelectorAll('.theme-color');
+        themeColors.forEach(color => {
+            color.addEventListener('click', () => {
+                const theme = color.getAttribute('data-theme');
+                document.documentElement.setAttribute('data-theme', theme);
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- 接上一步代码，在<div class="container">中添加以下内容 -->
+
+        <main>
+            <!-- 欢迎卡片 -->
+            <div class="card" id="home">
+                <h2><i class="fas fa-star"></i> 欢迎来到阮铭泽の空间</h2>
+                <p>这里是阮铭泽的私人多功能网站，整合了开发工具、系统知识和娱乐功能。</p>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-circle" style="color: #2ecc71;"></i>
+                        <span>系统运行中</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-server"></i>
+                        <span>服务在线</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FTP服务 -->
+            <div class="card" id="ftp">
+                <h2><i class="fas fa-folder-open"></i> FTP文件服务</h2>
+                <div style="padding: 20px; text-align: center;">
+                    <div style="font-size: 64px; color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div style="background: var(--card-bg); padding: 12px 25px; border-radius: 50px; font-family: monospace; font-size: 20px; margin: 20px 0;">
+                        ftp://192.168.1.102/
+                    </div>
+                    <button style="padding: 12px 25px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">
+                        <i class="fas fa-external-link-alt"></i> 尝试在浏览器打开
+                    </button>
+                </div>
+            </div>
+        </main>
+<!-- 接上一步代码，在<div class="container">中添加以下内容 -->
+
+        <main>
+            <!-- 欢迎卡片 -->
+            <div class="card" id="home">
+                <h2><i class="fas fa-star"></i> 欢迎来到阮铭泽の空间</h2>
+                <p>这里是阮铭泽的私人多功能网站，整合了开发工具、系统知识和娱乐功能。</p>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-circle" style="color: #2ecc71;"></i>
+                        <span>系统运行中</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-server"></i>
+                        <span>服务在线</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FTP服务 -->
+            <div class="card" id="ftp">
+                <h2><i class="fas fa-folder-open"></i> FTP文件服务</h2>
+                <div style="padding: 20px; text-align: center;">
+                    <div style="font-size: 64px; color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div style="background: var(--card-bg); padding: 12px 25px; border-radius: 50px; font-family: monospace; font-size: 20px; margin: 20px 0;">
+                        ftp://192.168.1.102/
+                    </div>
+                    <button style="padding: 12px 25px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">
+                        <i class="fas fa-external-link-alt"></i> 尝试在浏览器打开
+                    </button>
+                </div>
+            </div>
+        </main>
+        <!-- 接上一步代码，在<main>中添加以下内容 -->
+
+            <!-- 整合编辑器 -->
+            <div class="card" style="grid-column: span 2;" id="editors">
+                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.03); border-radius: 8px; padding: 5px;">
+                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white;">
+                            <i class="fas fa-cat"></i> TurboWarp Scratch
+                        </div>
+                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-python"></i> Python编辑器
+                        </div>
+                    </div>
+                </div>
+<!-- 接上一步代码，在<main>中添加以下内容 -->
+
+            <!-- 整合编辑器 -->
+            <div class="card" style="grid-column: span 2;" id="editors">
+                <h2><i class="fas fa-code"></i> 整合开发环境</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.03); border-radius: 8px; padding: 5px;">
+                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white;">
+                            <i class="fas fa-cat"></i> TurboWarp Scratch
+                        </div>
+                        <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-python"></i> Python编辑器
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scratch编辑器 -->
+                <div style="height: 500px; width: 100%; border-radius: 8px; overflow: hidden;">
+                    <!-- TurboWarp官方嵌入 -->
+                    <iframe 
+                        src="https://turbowarp.org/editor/embed" 
+                        width="100%" 
+                        height="100%" 
+                        allowtransparency="true"
+                        frameborder="0" 
+                        scrolling="no" 
+                        allowfullscreen
+                        style="border-radius: 8px;">
+                    </iframe>
+                </div>
+            </div>
+<!-- 接上一步代码，添加Python编辑器标签页 -->
+
+                <!-- Python编辑器（默认隐藏） -->
+                <div style="display: none; flex-direction: column;">
+                    <div style="background: #282c34; border-radius: 8px; overflow: hidden; flex-grow: 1;">
+                        <div style="background: #252526; color: #cccccc; padding: 10px 15px; font-family: monospace; font-size: 14px;">
+                            <span>script.py</span>
+                            <span>Python 3.11</span>
+                        </div>
+                        <textarea style="width: 100%; height: 400px; padding: 15px; background: #282c34; color: #abb2bf; font-family: monospace; resize: vertical;">
+# Python代码编辑器
+print("欢迎使用Python编辑器")
+                        </textarea>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-top: 15px; gap: 12px;">
+                        <button style="padding: 12px 25px; border-radius: 8px; border: none; background: #2ecc71; color: white; cursor: pointer;">
+                            <i class="fas fa-play"></i> 运行代码
+                        </button>
+                        <button style="padding: 12px 25px; border-radius: 8px; border: none; background: #e74c3c; color: white; cursor: pointer;">
+                            <i class="fas fa-trash"></i> 清空
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 15px; background: #2c3e50; color: white; border-radius: 8px; padding: 15px; min-height: 100px; font-family: monospace;">
+                        等待执行代码...点击"运行代码"查看结果
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        
+        <!-- 页脚 -->
+        <footer style="text-align: center; padding: 30px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);">
+            <p>© 2023 阮铭泽の个人网站 | 知行合一 · 技趣相融</p>
+            <p>联系邮箱: mingze.ruan@example.com</p>
+        </footer>
+<!-- 添加在</body>标签前 -->
+
+    <script>
+        // 主题切换功能
+        document.querySelectorAll('.theme-color').forEach(color => {
+            color.addEventListener('click', () => {
+                const theme = color.getAttribute('data-theme');
+                document.documentElement.setAttribute('data-theme', theme);
+            });
+        });
+
+        // 编辑器标签切换功能
+        const tabs = document.querySelectorAll('.editor-tabs > div');
+        const editors = document.querySelectorAll('#editors > div:last-child > div');
+        
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // 移除所有激活状态
+                tabs.forEach(t => {
+                    t.style.background = "";
+                    t.style.color = "";
+                });
+                // 隐藏所有编辑器
+                editors.forEach(e => e.style.display = "none");
+                
+                // 设置当前激活状态
+                tab.style.background = "var(--primary)";
+                tab.style.color = "white";
+                
+                // 显示当前编辑器
+                editors[index].style.display = "flex";
+            });
+        });
+        
+        // Python运行功能
+        const runBtn = document.querySelector('#editors button:first-of-type');
+        const output = document.querySelector('#editors > div:last-child > div:last-child');
+        
+        runBtn.addEventListener('click', () => {
+            output.innerHTML = "<i class='fas fa-spinner fa-spin'></i> 正在执行代码...";
+            
+            // 模拟执行过程
+            setTimeout(() => {
+                output.innerHTML = "代码执行成功！\n输出：欢迎使用Python编辑器";
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
