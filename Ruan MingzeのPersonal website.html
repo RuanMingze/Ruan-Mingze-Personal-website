@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>阮铭泽の个人网站</title>
+    <title>阮铭泽工具箱</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -18,6 +18,7 @@
             --secondary: #2c3e50;
             --accent: #e74c3c;
             --success: #2ecc71;
+            --info: #9b59b6;
             --text: #333;
             --bg: #f5f7fa;
             --card-bg: #ffffff;
@@ -31,6 +32,8 @@
             --primary: #1abc9c;
             --secondary: #1f2c38;
             --accent: #e67e22;
+            --success: #27ae60;
+            --info: #8e44ad;
             --text: #ecf0f1;
             --bg: #121212;
             --card-bg: #1e1e1e;
@@ -76,6 +79,25 @@
             line-height: 1.6;
         }
         
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .platform-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
         .main-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -91,6 +113,7 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         
         .card:hover {
@@ -185,7 +208,7 @@
             margin-bottom: 15px;
         }
         
-        .editor-btn {
+        .btn {
             padding: 12px 20px;
             border-radius: 8px;
             border: none;
@@ -197,19 +220,24 @@
             align-items: center;
             gap: 8px;
             transition: all 0.2s ease;
+            text-decoration: none;
         }
         
-        .editor-btn:hover {
+        .btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
         }
         
-        .editor-run {
+        .btn-run {
             background: var(--success);
         }
         
-        .editor-clear {
+        .btn-clear {
             background: var(--accent);
+        }
+        
+        .btn-scratch {
+            background: var(--info);
         }
         
         textarea.python-editor {
@@ -238,90 +266,19 @@
             overflow: auto;
         }
         
-        /* 天气小组件 */
-        .weather-widget {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .current-weather {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            padding: 15px;
+        /* Scratch编辑器 */
+        .scratch-container {
+            width: 100%;
+            height: 500px;
             border-radius: var(--radius);
-            background: linear-gradient(135deg, #3498db, #8e44ad);
-            color: white;
+            overflow: hidden;
+            border: 2px solid var(--border);
         }
         
-        .weather-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .temp-large {
-            font-size: 3.5rem;
-            font-weight: bold;
-            line-height: 1;
-        }
-        
-        .weather-location {
-            font-size: 1.5rem;
-            margin: 5px 0;
-        }
-        
-        .weather-desc {
-            font-size: 1.2rem;
-        }
-        
-        .weather-icon {
-            font-size: 5rem;
-        }
-        
-        .forecast {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-        
-        .forecast-day {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        
-        .day-name {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .forecast-icon {
-            font-size: 2rem;
-            margin: 10px 0;
-            color: #f1c40f;
-        }
-        
-        .forecast-temp {
-            font-weight: bold;
-        }
-        
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            z-index: 100;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         
         /* 推荐网站栏 */
@@ -492,6 +449,36 @@
             color: var(--accent);
         }
         
+        .version-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+        
+        .location-info {
+            padding: 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+        
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -503,12 +490,6 @@
                 gap: 10px;
             }
             
-            .current-weather {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-            
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -516,28 +497,105 @@
             .website-card {
                 min-height: auto;
             }
+            
+            .scratch-container {
+                height: 400px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>阮铭泽の个人网站</h1>
-            <p class="description">整合开发环境、实用工具和资源推荐的全功能网站</p>
+            <h1>阮铭泽工具箱</h1>
+            <p class="description">多功能实用工具箱 - 开发助手 | 网络工具 | 资源中心</p>
+            <div class="platform-indicator">网页版 v1.1</div>
         </header>
         
         <div class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon" id="themeIcon"></i>
         </div>
         
+        <div class="toolbar">
+            <button class="btn btn-run" id="getLocation">
+                <i class="fas fa-map-marker-alt"></i> 获取位置
+            </button>
+            <button class="btn btn-clear" id="resetTheme">
+                <i class="fas fa-sync-alt"></i> 重置主题
+            </button>
+            <a href="https://scratch.mit.edu/projects/editor/" class="btn btn-scratch" target="_blank">
+                <i class="fas fa-expand"></i> 全屏Scratch
+            </a>
+        </div>
+        
         <div class="main-content">
+            <!-- Python编辑器部分 -->
+            <div class="card">
+                <h2><i class="fab fa-python"></i> Python编辑器</h2>
+                
+                <div class="editor-toolbar">
+                    <button class="btn btn-run" id="runCode">
+                        <i class="fas fa-play"></i> 运行代码
+                    </button>
+                    <button class="btn btn-clear" id="clearCode">
+                        <i class="fas fa-trash"></i> 清空
+                    </button>
+                </div>
+                
+                <textarea class="python-editor" id="pythonEditor"># Python代码编辑器
+def factorial(n):
+    """计算阶乘"""
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+# 主函数
+if __name__ == "__main__":
+    num = 5
+    result = factorial(num)
+    print(f"{num}的阶乘是: {result}")
+    
+    # 其他操作
+    names = ["阮铭泽", "张三", "李四", "王五"]
+    print("名字列表:", names)
+    
+    # 打印欢迎信息
+    print("欢迎使用阮铭泽的Python编辑器")</textarea>
+                
+                <div class="output-container" id="output">
+                    运行结果将在这里显示...
+                </div>
+            </div>
+            
+            <!-- Scratch编辑器部分 -->
+            <div class="card">
+                <h2><i class="fas fa-puzzle-piece"></i> Scratch在线编辑器</h2>
+                
+                <div class="editor-toolbar">
+                    <button class="btn btn-scratch" id="newProject">
+                        <i class="fas fa-file"></i> 新建项目
+                    </button>
+                    <button class="btn btn-run" id="runScratch">
+                        <i class="fas fa-play"></i> 运行
+                    </button>
+                </div>
+                
+                <div class="scratch-container">
+                    <iframe id="scratchEditor" src="https://scratch.mit.edu/projects/editor/?tutorial=getStarted"></iframe>
+                </div>
+                <div class="location-info">
+                    注意：Scratch编辑器加载可能需要一些时间，请耐心等待。如果无法加载，请使用顶部的"全屏Scratch"按钮。
+                </div>
+            </div>
+            
             <!-- FTP指南部分 -->
             <div class="card">
-                <h2><i class="fas fa-folder-open"></i> FTP访问指南</h2>
+                <h2><i class="fas fa-folder-open"></i> 配套工具访问指南</h2>
                 
                 <div class="ftp-address">
                     <span>ftp://192.168.1.102/</span>
-                    <button class="editor-btn" id="copyFtpBtn">
+                    <button class="btn" id="copyFtpBtn">
                         <i class="fas fa-copy"></i> 复制地址
                     </button>
                 </div>
@@ -572,108 +630,28 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Python编辑器部分 -->
-            <div class="card">
-                <h2><i class="fab fa-python"></i> Python编辑器</h2>
-                
-                <div class="editor-toolbar">
-                    <button class="editor-btn editor-run" id="runCode">
-                        <i class="fas fa-play"></i> 运行代码
-                    </button>
-                    <button class="editor-btn editor-clear" id="clearCode">
-                        <i class="fas fa-trash"></i> 清空
-                    </button>
-                </div>
-                
-                <textarea class="python-editor" id="pythonEditor"># Python代码编辑器
-def factorial(n):
-    """计算阶乘"""
-    if n == 0:
-        return 1
-    else:
-        return n * factorial(n-1)
-
-# 主函数
-if __name__ == "__main__":
-    num = 5
-    result = factorial(num)
-    print(f"{num}的阶乘是: {result}")
-    
-    # 其他操作
-    names = ["阮铭泽", "张三", "李四", "王五"]
-    print("名字列表:", names)
-    
-    # 打印欢迎信息
-    print("欢迎使用阮铭泽的Python编辑器")</textarea>
-                
-                <div class="output-container" id="output">
-                    运行结果将在这里显示...
-                </div>
-            </div>
-            
-            <!-- 天气小组件 -->
-            <div class="card">
-                <h2><i class="fas fa-cloud-sun"></i> 天气信息</h2>
-                
-                <div class="weather-widget">
-                    <div class="current-weather">
-                        <div class="weather-info">
-                            <div class="temp-large">26°</div>
-                            <div class="weather-location">北京市</div>
-                            <div class="weather-desc">晴朗</div>
-                        </div>
-                        <div class="weather-icon">
-                            <i class="fas fa-sun"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="forecast">
-                        <div class="forecast-day">
-                            <div class="day-name">今天</div>
-                            <div class="forecast-icon"><i class="fas fa-sun"></i></div>
-                            <div class="forecast-temp">25°-29°</div>
-                        </div>
-                        
-                        <div class="forecast-day">
-                            <div class="day-name">周一</div>
-                            <div class="forecast-icon"><i class="fas fa-cloud-sun"></i></div>
-                            <div class="forecast-temp">24°-28°</div>
-                        </div>
-                        
-                        <div class="forecast-day">
-                            <div class="day-name">周二</div>
-                            <div class="forecast-icon"><i class="fas fa-cloud"></i></div>
-                            <div class="forecast-temp">23°-27°</div>
-                        </div>
-                        
-                        <div class="forecast-day">
-                            <div class="day-name">周三</div>
-                            <div class="forecast-icon"><i class="fas fa-cloud-rain"></i></div>
-                            <div class="forecast-temp">21°-25°</div>
-                        </div>
-                        
-                        <div class="forecast-day">
-                            <div class="day-name">周四</div>
-                            <div class="forecast-icon"><i class="fas fa-sun"></i></div>
-                            <div class="forecast-temp">24°-28°</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         
         <!-- 推荐网站栏 -->
         <section class="website-recommendations">
             <div class="websites-header">
                 <h2><i class="fas fa-link"></i> 实用网站推荐</h2>
-                <button class="editor-btn" id="showAddForm">
+                <button class="btn" id="showAddForm">
                     <i class="fas fa-plus"></i> 添加网站
                 </button>
             </div>
             
             <div class="websites-grid" id="websitesGrid">
                 <!-- 固定推荐网站 -->
+                <div class="website-card">
+                    <div class="website-icon">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <h3 class="website-title">GitHub资源库</h3>
+                    <p class="website-desc">全球最大开源代码库</p>
+                    <a href="https://github.com/" class="website-btn" target="_blank">访问网站</a>
+                </div>
+                
                 <div class="website-card">
                     <div class="website-icon">
                         <i class="fas fa-cog"></i>
@@ -727,7 +705,7 @@ if __name__ == "__main__":
                     </div>
                     <div class="form-group">
                         <label style="opacity: 0;">操作按钮</label>
-                        <button class="editor-btn" id="addWebsiteBtn">
+                        <button class="btn" id="addWebsiteBtn">
                             <i class="fas fa-check"></i> 确认添加
                         </button>
                     </div>
@@ -736,7 +714,7 @@ if __name__ == "__main__":
         </section>
         
         <footer>
-            <p>© 2023 阮铭泽の个人网站 | 知行合一 · 技趣相融</p>
+            <p>© 2023 阮铭泽工具箱 | 实用工具集合</p>
             <div class="contact-info">
                 <div class="email-item">
                     <i class="fas fa-envelope"></i>
@@ -747,6 +725,9 @@ if __name__ == "__main__":
                     <span>ruanmingze2016@gmail.com</span>
                 </div>
             </div>
+            <div class="version-info">
+                版本: v1.1.0 | 最后更新: 2023年10月16日 | 技术支持: 阮铭泽
+            </div>
         </footer>
     </div>
 
@@ -756,8 +737,9 @@ if __name__ == "__main__":
         const themeIcon = document.getElementById('themeIcon');
         const body = document.body;
         
-        // 检查本地存储中的主题设置
-        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        // 初始化主题设置
+        let isDarkMode = localStorage.getItem('darkMode') === 'true' || 
+                       window.matchMedia('(prefers-color-scheme: dark)').matches;
         
         // 应用主题设置
         function applyTheme() {
@@ -768,9 +750,22 @@ if __name__ == "__main__":
                 body.setAttribute('data-theme', 'light');
                 themeIcon.className = 'fas fa-moon';
             }
-            // 保存到本地存储
             localStorage.setItem('darkMode', isDarkMode);
         }
+        
+        // 重置主题
+        document.getElementById('resetTheme').addEventListener('click', function() {
+            localStorage.removeItem('darkMode');
+            isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme();
+            
+            // 显示反馈
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> 已重置';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 1500);
+        });
         
         // 初始化主题
         applyTheme();
@@ -814,7 +809,12 @@ if __name__ == "__main__":
                         } else if (call.includes('欢迎')) {
                             value = "欢迎使用阮铭泽的Python编辑器";
                         } else {
-                            value = call.replace(/^f*['"]|['"]$/g, '').replace(/\\n/g, '\n');
+                            // 尝试执行简单计算
+                            try {
+                                value = eval(call.replace(/^f*['"]|['"]$/g, '')).toString();
+                            } catch (e) {
+                                value = call.replace(/^f*['"]|['"]$/g, '').replace(/\\n/g, '\n');
+                            }
                         }
                         resultOutput += `>>> ${value}\n`;
                     });
@@ -822,7 +822,7 @@ if __name__ == "__main__":
                 } else {
                     output.innerHTML = "代码执行成功（没有输出语句）";
                 }
-            }, 1500);
+            }, 1000);
         });
         
         clearBtn.addEventListener('click', () => {
@@ -889,7 +889,7 @@ if __name__ == "__main__":
                 <h3 class="website-title">${website.name}</h3>
                 <p class="website-desc">${website.desc || '自定义网站'}</p>
                 <a href="${website.url}" class="website-btn" target="_blank">访问网站</a>
-                <div class="delete-btn" data-name="${website.name}">
+                <div class="delete-btn">
                     <i class="fas fa-times"></i>
                 </div>
             `;
@@ -911,7 +911,7 @@ if __name__ == "__main__":
             const customWebsites = [];
             
             customCards.forEach(card => {
-                // 跳过固定推荐网站
+                // 跳过固定推荐网站（这些没有删除按钮）
                 if (!card.querySelector('.delete-btn')) return;
                 
                 const title = card.querySelector('.website-title').textContent;
@@ -970,9 +970,64 @@ if __name__ == "__main__":
             showAddFormBtn.innerHTML = '<i class="fas fa-plus"></i> 添加网站';
         });
         
+        // Scratch编辑器功能
+        const scratchEditor = document.getElementById('scratchEditor');
+        const newProjectBtn = document.getElementById('newProject');
+        const runScratchBtn = document.getElementById('runScratch');
+        
+        newProjectBtn.addEventListener('click', function() {
+            if (confirm('确定要开始新的Scratch项目吗？')) {
+                scratchEditor.src = "https://scratch.mit.edu/projects/editor/?tutorial=getStarted";
+            }
+        });
+        
+        runScratchBtn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-play"></i> 运行中...';
+            setTimeout(() => {
+                try {
+                    scratchEditor.contentWindow.postMessage('run', '*');
+                } catch (e) {
+                    alert('无法运行Scratch项目，请尝试在Scratch编辑器内运行。');
+                }
+                this.innerHTML = originalText;
+            }, 500);
+        });
+        
+        // 获取位置功能
+        document.getElementById('getLocation').addEventListener('click', function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 定位中...';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    alert(`定位成功！\n纬度: ${lat.toFixed(6)}\n经度: ${lng.toFixed(6)}`);
+                    btn.innerHTML = originalText;
+                }, function(error) {
+                    alert('定位失败：' + error.message);
+                    btn.innerHTML = originalText;
+                }, {
+                    timeout: 10000,
+                    maximumAge: 0,
+                    enableHighAccuracy: true
+                });
+            } else {
+                alert("您的浏览器不支持地理位置功能");
+                btn.innerHTML = originalText;
+            }
+        });
+        
         // 初始化网站
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCustomWebsites();
+        loadCustomWebsites();
+        
+        // 模拟窗口加载完成
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.platform-indicator').classList.add('loaded');
+            }, 1000);
         });
     </script>
 </body>
