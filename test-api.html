@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API测试页面</title>
+</head>
+<body>
+    <h1>API测试页面</h1>
+    <button onclick="testRegister()">测试注册</button>
+    <button onclick="testLogin()">测试登录</button>
+    <div id="result"></div>
+
+    <script>
+        async function testRegister() {
+            try {
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: '测试用户2',
+                        username: 'testuser2',
+                        password: 'test123',
+                        email: 'test2@example.com',
+                        phone: '13800138001'
+                    })
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<p>注册结果: ' + JSON.stringify(result) + '</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p>注册错误: ' + error.message + '</p>';
+            }
+        }
+        
+        async function testLogin() {
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'testuser2',
+                        password: 'test123'
+                    })
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = '<p>登录结果: ' + JSON.stringify(result) + '</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p>登录错误: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

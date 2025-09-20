@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账户登录 - 阮铭泽工具箱</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --light-bg: #f5f7fa;
+            --dark-bg: #121220;
+            --card-bg: #ffffff;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+        
+        .dark-mode {
+            --primary-color: #5e72e4;
+            --dark-bg: #121220;
+            --light-bg: #1a1a2e;
+            --card-bg: #252540;
+            --text-dark: #f0f2f5;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .login-header p {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(67,97,238,0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: transparent;
+            color: inherit;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67,97,238,0.2);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary:hover {
+            background: #304fd1;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(67,97,238,0.1);
+            color: var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(67,97,238,0.2);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+        
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .switch-form {
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* 深色模式适配 */
+        .dark-mode .form-control {
+            border-color: rgba(94,114,228,0.3);
+        }
+        
+        .dark-mode .btn-secondary {
+            background: rgba(94,114,228,0.2);
+            color: #7c8cfa;
+        }
+        
+        /* 加载指示器 */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>返回工具箱</span>
+        </a>
+        
+        <div class="login-header">
+            <h1>账户登录</h1>
+            <p>使用您注册的账户信息登录</p>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>登录中...</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="identifier">手机号或邮箱</label>
+                <input type="text" id="identifier" class="form-control" placeholder="请输入手机号或邮箱" required>
+                <div class="error-message" id="identifierError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" class="form-control" placeholder="请输入密码" required>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                登录
+            </button>
+        </form>
+        
+        <div class="switch-form">
+            <p>还没有账户？ <a href="register.html">立即注册</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时尝试设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                document.cookie = name + "=" + value + ";" + expires + ";path=/";
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            return "";
+        }
+        
+        // 用户登录函数（使用后端API）
+        async function userLogin(identifier, password) {
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: identifier, password: password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 获取用户的完整信息（包括头像和设置）
+                    const userResponse = await fetch(`http://localhost:3000/api/user/${identifier}`);
+                    const userResult = await userResponse.json();
+                    
+                    let user;
+                    if (userResult.success) {
+                        // 使用从后端获取的完整用户信息
+                        user = {
+                            id: 'user_' + Date.now(),
+                            name: userResult.user.name,
+                            username: userResult.user.username,
+                            email: userResult.user.email,
+                            phone: userResult.user.phone,
+                            avatar: userResult.user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(userResult.user.name)}&background=4361ee&color=fff&size=80`,
+                            provider: 'local',
+                            created_at: userResult.user.createdAt,
+                            // 应用用户的设置
+                            theme: userResult.user.theme || 'light',
+                            language: userResult.user.language || 'zh',
+                            selectedCity: userResult.user.selectedCity || 'beijing'
+                        };
+                        
+                        // 应用用户的主题设置
+                        if (user.theme === 'dark') {
+                            document.body.classList.add('dark-mode');
+                            // 注意：这里需要确保index.html中有themeSelect元素
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                        }
+                        
+                        // 应用用户的语言设置
+                        setCookie("language", user.language, 30);
+                        
+                        // 应用用户选择的城市
+                        setCookie("selectedCity", user.selectedCity, 30);
+                    } else {
+                        // 如果获取用户信息失败，使用默认信息
+                        user = {
+                            id: 'user_' + Date.now(),
+                            name: result.user.name,
+                            username: result.user.username,
+                            email: result.user.email,
+                            phone: result.user.phone,
+                            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(result.user.name)}&background=4361ee&color=fff&size=80`,
+                            provider: 'local',
+                            created_at: result.user.createdAt
+                        };
+                    }
+                    
+                    // 保存用户信息到localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // 保存登录状态到Cookie
+                    setCookie("loginStatus", "logged_in", 30);
+                    setCookie("currentUser", JSON.stringify(user), 30);
+                    
+                    return { success: true };
+                } else {
+                    return { success: false, message: result.message };
+                }
+            } catch (error) {
+                console.error('登录请求失败:', error);
+                return { success: false, message: '网络错误，请稍后重试' };
+            }
+        }
+        
+        // 表单提交处理
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // 简单验证
+            let isValid = true;
+            
+            if (identifier === '') {
+                showError('identifierError', '请输入手机号或邮箱');
+                isValid = false;
+            } else {
+                // 验证是否为手机号或邮箱格式
+                const phoneRegex = /^1[3-9]\d{9}$/;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!phoneRegex.test(identifier) && !emailRegex.test(identifier)) {
+                    showError('identifierError', '请输入正确的手机号或邮箱格式');
+                    isValid = false;
+                } else {
+                    hideError('identifierError');
+                }
+            }
+            
+            if (password === '') {
+                showError('passwordError', '请输入密码');
+                isValid = false;
+            } else {
+                hideError('passwordError');
+            }
+            
+            if (isValid) {
+                // 显示加载指示器
+                document.getElementById('loading').style.display = 'block';
+                document.querySelector('.btn-primary').disabled = true;
+                
+                try {
+                    // 尝试登录
+                    const result = await userLogin(identifier, password);
+                    
+                    if (result.success) {
+                        alert('登录成功！');
+                        // 跳转回主页
+                        window.location.href = 'index.html';
+                    } else {
+                        alert(result.message || '登录失败');
+                    }
+                } finally {
+                    // 隐藏加载指示器
+                    document.getElementById('loading').style.display = 'none';
+                    document.querySelector('.btn-primary').disabled = false;
+                }
+            }
+        });
+        
+        // 显示错误信息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // 隐藏错误信息
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'none';
+        }
+        
+        // 页面加载时检查主题
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = getCookie("theme");
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
