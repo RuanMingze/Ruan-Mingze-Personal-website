@@ -16,7 +16,7 @@
 ## 使用方法
 
 ### 本地使用
-直接打开 `index.html` index.html即可使用所有功能。
+直接打开 `index.html` 即可使用所有功能。
 
 ### 网站部署
 将所有文件上传到Web服务器，确保 `index.html` 作为首页。
@@ -48,3 +48,4 @@
 © 2024 阮铭泽工具箱
 
 联系邮箱: ruanmingze2016@gmail.com | xmt20160124@outlook.com
+
